@@ -8,25 +8,27 @@ import { LitElement, html, css } from 'lit';
 
 export class MyCard extends LitElement {
 
+
   static get tag() {
     return 'my-card';
   }
-
   constructor() {
     super();
     this.card = "";
     this.title = "";
     this.blurb = "";
-    this.picture = "#";
+    this.picture = null;
     this.link = "#";
     this.button="";
+    this.description = "";
+    this.fancy = false;
     
   }
 
   static get styles() {
     return css`
       :host {
-        display: block;
+        display: inline-flex;
         border: 8px outset #a68a64;
         margin: 64px;
         padding: 16px;
@@ -36,11 +38,18 @@ export class MyCard extends LitElement {
         background-color: #a4ac86;
         text-decoration-style:none;
       }
+      :host([fancy]) {
+      background-color: pink;
+      border: 2px solid fuchsia;
+      box-shadow: 10px 5px 5px red;
+      }
+
     h1 {
       font-family: verdana;
       text-align: center;
       color: #132a13;
     }
+
     p {
       padding: 8px;
       background-color: #a68a64;
@@ -51,54 +60,66 @@ export class MyCard extends LitElement {
     }
 
     img {
-      height: 250px;
-      max-width: 370px;
+      max-width: 75%;
+      max-height: 50%;
       width: 100%;
       margin: auto;
       border: 6px outset #a68a64;
       border-radius: 6px;
     }
 
-    .button{
+    a {
+      display: flex;
+      justify-content: center;
+    }
+    
+    button {
       text-align: center;
       padding: 6px;
-      margin: 6px 0px 0px 0px;
-    }
-
-    #btn {
       background-color: #a68a64;
       color: #132a13;
-      padding: 8px 64px;
       border-color: #a4ac86;
       border-radius: 6px;
       border-width: 6px;
       font-family: verdana;
     }
 
-    #btn:hover {
+    button:focus,
+    button:hover {
       color: #132a13;
       background-color: #a4ac86;
       border-color: #a68a64;
     }
-    @media (min-width: 500px) and (max-width: 800px) {
-      button {
-        display: inline-block;
-      }
+    details summary {
+    text-align: left;
+    font-size: 20px;
+    padding: 8px 0;
     }
-    @media (max-width: 500px) {
-      div {
-        max-width: 400px;
-        width: auto;
-      }
-      img {
-        height: 75%;
-        width: 75%;
-      }
-      p, #btn {
-        font-size: 16px;
-      }
+
+    details[open] summary {
+    font-weight: bold;
+    }
+
+    details div {
+    border: 6px outset #a68a64;
+    border-radius: 6px;
+    text-align: left;
+    padding: 8px;
+    padding-bottom: 2px;
+    height: 70px;
+    overflow: auto;
     }
     `;
+  }
+
+  openChanged(e) {
+    console.log(e.newState);
+    if (e.newState === "open") {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 
   render() {
@@ -106,12 +127,16 @@ export class MyCard extends LitElement {
       <div>
         <h1>${this.title}</h1>
         <p>${this.blurb}</p>
-        <img src="${this.picture}" alt="${this.title}">
-        <div class="button">
-          <a href="${this.link}">${this.text} 
-            <button id="btn">${this.button}</button>
-          </a> 
+        <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+        <summary>Description</summary>
+        <div>
+          <slot>${this.description}</slot>
         </div>
+        </details>
+        <img src="${this.picture}" alt="${this.title}">
+        <a href="${this.link}">${this.text} 
+            <button>${this.button}</button>
+        </a> 
       </div>
     `;
   }
@@ -123,7 +148,9 @@ export class MyCard extends LitElement {
       blurb: { type: String },
       picture: { type: String},
       link: { type: String},  
-      button: { type: String}    
+      button: { type: String},   
+      description: { type:String },
+      fancy: { type:Boolean, reflect : true }
     };
   }
 }
