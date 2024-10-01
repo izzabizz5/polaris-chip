@@ -22,7 +22,11 @@ export class MyCard extends LitElement {
     this.button="";
     this.description = "";
     this.fancy = false;
-    
+    this.question = "";
+    this.type = "";
+    this.value = null;
+    this.correct = "";
+    this.role = "";    
   }
 
   static get styles() {
@@ -90,6 +94,10 @@ export class MyCard extends LitElement {
       background-color: #a4ac86;
       border-color: #a68a64;
     }
+    question {
+
+    }
+
     details summary {
     text-align: left;
     font-size: 20px;
@@ -132,6 +140,9 @@ export class MyCard extends LitElement {
         <div>
           <slot>${this.description}</slot>
         </div>
+        <multiple-choice> 
+          <slot>${this.question} </slot>
+        </multiple-choice>
         </details>
         <img src="${this.picture}" alt="${this.title}">
         <a href="${this.link}">${this.text} 
@@ -150,7 +161,12 @@ export class MyCard extends LitElement {
       link: { type: String},  
       button: { type: String},   
       description: { type:String },
-      fancy: { type:Boolean, reflect : true }
+      fancy: { type:Boolean, reflect : true },
+      question: { type:String },
+      type: { type:String },
+      value: { type:Boolean },
+      correct: { type:String },
+      role: { type: String },
     };
   }
 }
